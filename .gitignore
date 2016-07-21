@@ -1,0 +1,7 @@
+real/*/*
+real/*.sdf
+real/*.sln
+real/*.suo
+
+!real/real/*.cpp
+!.gitigonre
