@@ -37,7 +37,7 @@ namespace jp
 		JNode(std::string _key, const double &_value) : mKey(_key){ SetValue(_value); }
 		JNode(std::string _key, const std::string &_value) : mKey(_key){ SetValue(_value); }
 		JNode(std::string _key, const bool &_value) : mKey(_key){ SetValue(_value); }
-		~JNode();
+		virtual ~JNode();
 
 		/* interface */
 	public:
@@ -51,6 +51,7 @@ namespace jp
 		void SetValue(const double &val);
 		void SetValue(const std::string &val);
 		void SetValue(const bool &val);
+		
 		/* member fun */
 
 		/* membber var */
@@ -60,11 +61,29 @@ namespace jp
 		JValueType mType;
 	};
 
+	class JTree
+	{
+		/* ctor and de-ctor */
+	public:
+		JTree() :root(NULL){}
+		virtual ~JTree(){}
+
+		/* interface */
+	public:
+
+		/* member fun */
+	private:
+
+		/* member var */
+	private:
+		JNode *root;
+	};
+
 	class Jscpp
 	{
 		/* ctor and de-ctor */
 	public:
-		Jscpp() :root(NULL){}
+		Jscpp() :jtree(NULL){}
 		virtual ~Jscpp(){}
 
 		/* interface */
@@ -73,7 +92,7 @@ namespace jp
 
 		/* member var */
 	private :
-		JNode* root;
+		JTree* jtree;			//json tree
 	};
 };
 

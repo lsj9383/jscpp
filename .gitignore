@@ -2,6 +2,9 @@ real/*/*
 real/*.sdf
 real/*.sln
 real/*.suo
+real/*.opensdf
+real/real/*.opensdf
 
 !real/real/*.cpp
+!real/real/*.h
 !.gitigonre

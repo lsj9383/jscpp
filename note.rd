@@ -22,7 +22,7 @@
 	6).数组
 
 二、关键数据结构：
-	(以下程序只是个表示，并不代表能运行)
+	(以下程序只是个逻辑表示，并不代表能运行)
 	1.JNode
 	key:value数据用一个node来进行表示
 	struct JNode
@@ -66,8 +66,10 @@
 	以上是数据结构的一种逻辑组织，代码组织将其稍微变形
 	1.JNode
 		构造函数
-			JNode(key, value);建立一个key:value的node， type会根据value自行设置
-			JNode();建立一个key:value都为空，type为JNULL的node
+			JNode(key, value);建立一个key:value的node， type会根据value自行设置。
+			JNode();建立一个key:value都为空，type为JNULL的node。
 		接口:
-			SetKey(Key), 重新设置key
-			SetValue(value), 重新设置value，type会根据value自行设置
+			SetKey(Key), 重新设置key。
+			SetValue(value), 重新设置value，type会根据value自行设置。
+		析构：
+			在JNode释放时，将会自动释放掉里面value的空间。
