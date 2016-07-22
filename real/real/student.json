@@ -1,0 +1,14 @@
+
+{
+   "code" : 7,
+   "age" : 23,
+   "year" : 1993,
+   "month" : 4,
+   "day" : 26,
+   "grad" : 
+   {
+      "chinese" : 89,
+      "math" : 115,
+      "english" : 102
+   }
+}

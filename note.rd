@@ -73,3 +73,22 @@
 			SetValue(value), 重新设置value，type会根据value自行设置。
 		析构：
 			在JNode释放时，将会自动释放掉里面value的空间。
+			
+	2.JTree
+		用于管理node的树空间。这是一个多叉树。
+		树的节点有三种类型:
+			1、叶子节点(非JOBJECT 非ARRAY型节点)。
+			2、对象节点，以JNode*指向子节点。
+			3、数组节点，子节点是特殊的UVal类型。
+		构造函数：
+		接口：
+			set
+			travel, 采用DFS遍历tree，并将返回值放在字符串中。需要明确的是，一个对象需要打印的内容为
+				{
+					key:...,
+					key:...,
+					key:...
+				}
+				其中的...由递归进行打印。
+	3.Jscpp
+		

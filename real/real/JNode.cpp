@@ -41,3 +41,21 @@ void JNode::SetValue(const bool &val)
 	*this->mValue.pBool = val;
 	this->mType = JBOOL;
 }
+
+
+void JNode::SetValue(const vector<JNode *> &val)
+{
+	this->mValue.pKeyValue = new vector<JNode *>(0);
+	for (int i = 0; i < val.size(); i++)
+	{
+		this->mValue.pKeyValue->push_back(val[i]);
+	}
+	this->mType = JOBJECT;
+}
+
+void JNode::AddObject(const JNode* newObject)
+{
+	assert(this->mType == JOBJECT);		//要在当前node中添加newObject，那当前node必须为JOBJECT才能添加成功。
+	this->mValue.pKeyValue->push_back((JNode *)newObject);
+}
+

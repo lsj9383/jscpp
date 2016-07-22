@@ -7,4 +7,5 @@ real/real/*.opensdf
 
 !real/real/*.cpp
 !real/real/*.h
+!real/real/*.json
 !.gitigonre
