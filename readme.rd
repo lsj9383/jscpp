@@ -5,21 +5,21 @@ There is some interface for user:
 	
 	file io:
 		1).bool b = jscpp->save(file_path);
-			将jscpp的数据按json格式进行保存, b返回函数操作结果是否成功。
+		将jscpp的数据按json格式进行保存, b返回函数操作结果是否成功。
 			
 		2). bool b = jscpp->load(file_path);
-			将json格式数据，加载到jscpp的jtree中，b返回函数操作结果是否成功。
+		将json格式数据，加载到jscpp的jtree中，b返回函数操作结果是否成功。
 	
 	object io:
 		1).jscpp->set(value, key1, key2, key3, ..., ":");
-			//这是个变参方法，无返回，设置指定的字段数据。以待赋值开头，冒号结尾。
+		这是个变参方法，无返回，设置指定的字段数据。以待赋值开头，冒号结尾。
 			
 		2).JNode *n = jscpp->at(key1, key2, key3, ...);
-			//这是个变参方法，返回的是JNode类型，这里面包含了对应字段的数据类型、关键词、数据。
+		这是个变参方法，返回的是JNode类型，这里面包含了对应字段的数据类型、关键词、数据。
 			
 		3).bool b = jscpp->isAt(key1, key2, key3, ...);
-			//这是个变参方法，返回bool，用来检测指定的数据是否存在。
+		这是个变参方法，返回bool，用来检测指定的数据是否存在。
 		
 	other :
 		1).string s = jscpp->travel();
-		//遍历内容，并将内容保存于s中。
+		遍历内容，并将内容保存于s中。
