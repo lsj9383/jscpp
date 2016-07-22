@@ -1,14 +1,17 @@
-
 {
+   "name" : "lsj",
    "code" : 7,
    "age" : 23,
-   "year" : 1993,
-   "month" : 4,
-   "day" : 26,
-   "grad" : 
+   "man" : true,
+   "marry" : false,
+   "test" : 
    {
-      "chinese" : 89,
-      "math" : 115,
-      "english" : 102
+      "pass" : true,
+      "grade" : 
+      {
+         "chinese" : 89,
+         "math" : 115.5,
+         "english" : 103.1
+      }
    }
 }

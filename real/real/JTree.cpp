@@ -2,11 +2,13 @@
 #include "Jscpp.h"
 
 using namespace std;
-using namespace jp;
+using namespace jc;
 
 
 //将int转换为字符串
-static string getstring(const int n);
+static string getstring(int n);
+static string getstring(double n);
+static string getstring(bool n);
 static string prespace(int n);
 
 JTree::JTree(string _root_key)
@@ -15,9 +17,9 @@ JTree::JTree(string _root_key)
 	root = new JNode(_root_key, initKeyValue);
 }
 
-void JTree::set(int value, std::deque<std::string> path)
+void JTree::set(JValueType jtype, std::deque<std::string> path, UVal jval)
 {
-	_set(root, value, path);
+	_set(root, jtype, path, jval);
 }
 
 std::string JTree::travel(void)
@@ -26,12 +28,18 @@ std::string JTree::travel(void)
 	return _travel(root, 0);
 }
 
-
-void JTree::_set(JNode *cn, int value, std::deque<std::string> path)
+void JTree::_set(JNode *cn, JValueType jtype, std::deque<std::string> path, UVal jval)
 {
 	if (path.size() == 0)
 	{
-		cn->SetValue(value);
+		switch (jtype)
+		{
+		case JINT	:	cn->SetValue(*jval.pInt);			break;
+		case JDOUBLE:	cn->SetValue(*jval.pDouble);		break;
+		case JBOOL	:	cn->SetValue(*jval.pBool);			break;
+		case JSTRING:	cn->SetValue(*jval.pString);		break;
+		default		:	assert(false);						break;
+		}
 		return;
 	}
 
@@ -56,18 +64,27 @@ void JTree::_set(JNode *cn, int value, std::deque<std::string> path)
 	if (!isExist)
 	{
 		JNode *newJNode = new JNode(key);
+		vector<JNode*> initKeyValue;
+
 		if (path.size() > 1)				//大于1时说明后面还有对象.因此需要把后面的内容设置为
 		{
-			vector<JNode*> initKeyValue;
 			newJNode->SetValue(initKeyValue);
 		}
 		nextJNode = newJNode;
-		cn->AddObject(newJNode);
+
+		if (cn->GetType() == JOBJECT)		
+		{ 
+			cn->AddObject(newJNode);		//当前节点为对象时
+		}
+		else
+		{
+			return;							//当前节点为数组时的添加方式
+		}
 	}
 
 	//递归
 	path.pop_front();
-	_set(nextJNode, value, path);
+	_set(nextJNode, jtype, path, jval);
 }
 
 std::string JTree::_travel(JNode *cnode, int deep)
@@ -77,7 +94,9 @@ std::string JTree::_travel(JNode *cnode, int deep)
 
 	if (cnode->GetType() == JOBJECT)
 	{
-		retString = "\n" + prespace(deep*3) + "{\n";
+		if (deep != 0)
+			retString = "\n";
+		retString += prespace(deep*3) + "{\n";
 		for (int i = 0; i < cnode->GetValue().pKeyValue->size(); i++)
 		{
 			retString = retString + prespace((deep+1) * 3) + "\"" + cnode->GetValue().pKeyValue->at(i)->GetKey() + "\" : ";
@@ -95,18 +114,50 @@ std::string JTree::_travel(JNode *cnode, int deep)
 	{
 		switch (cnode->GetType())
 		{
-		case JINT: retString = getstring(*cnode->GetValue().pInt);break;
+		case JINT	: retString = getstring((int)*cnode->GetValue().pInt); break;
+		case JDOUBLE: retString = getstring((double)*cnode->GetValue().pDouble); break;
+		case JBOOL	: retString = getstring((bool)*cnode->GetValue().pBool); break;
+		case JSTRING: retString = "\"" + *cnode->GetValue().pString + "\""; break;
 		}
 	}
 
 	return retString;
 }
 
-static string getstring(const int n)
+void JTree::_freeTree(JNode *cn)
+{
+	//为JObject类型，应该释放完其子节点.
+	if (cn->GetType() == JOBJECT)
+	{
+		for (int i = cn->GetValue().pKeyValue->size()-1; i >= 0; i--)
+		{ 
+			_freeTree(cn->GetValue().pKeyValue->at(i));			//释放掉第i各节点.
+			cn->GetValue().pKeyValue->pop_back();				//将第i个节点的指针从vector中排出.
+		}
+	}
+
+	//cn此时为可删除节点.
+	delete cn;
+}
+
+static string getstring(int n)
 {
 	stringstream newstr;
 	newstr << n;
 	return newstr.str();
+}
+
+static string getstring(double n)
+{
+	stringstream newstr;
+	newstr << n;
+	return newstr.str();
+}
+
+static string getstring(bool n)
+{
+	if (n)	return "true";
+	else	return "false";
 }
 
 static string prespace(int n)

@@ -7,7 +7,7 @@
 #include <string>
 #include <assert.h>
 
-namespace jp
+namespace jc
 {
 	class JNode;
 	enum JValueType
@@ -28,7 +28,6 @@ namespace jp
 		std::string *pString;
 		bool *pBool;
 		std::vector<JNode *> *pKeyValue;
-		std::vector<UVal> *pArray;
 	};
 
 	class JNode
@@ -42,7 +41,7 @@ namespace jp
 		JNode(std::string _key, const std::string &_value) : mKey(_key){ SetValue(_value); }
 		JNode(std::string _key, const bool &_value) : mKey(_key){ SetValue(_value); }
 		JNode(std::string _key, const std::vector<JNode *> &_value) : mKey(_key){ SetValue(_value); }
-		virtual ~JNode();
+		~JNode();
 
 		/* interface */
 	public:
@@ -76,17 +75,23 @@ namespace jp
 	public:
 		JTree() :root(NULL){}
 		JTree(std::string _root_key = "root");
-		virtual ~JTree(){}
+		~JTree()
+		{
+			_freeTree(root);
+			root = NULL;
+		}
 
 		/* interface */
 	public:
-		void set(int value, std::deque<std::string> path);
+		void set(JValueType jtype, std::deque<std::string> path, UVal jval);
+
 		std::string travel(void);
 
 		/* member fun */
 	private:
-		void _set(JNode *cnode, int value, std::deque<std::string> path);
+		void _set(JNode *cnode, JValueType jtype, std::deque<std::string> path, UVal jval);
 		std::string _travel(JNode *cnode, int deep);
+		void _freeTree(JNode *cn);
 
 		/* member var */
 	private:
@@ -99,7 +104,14 @@ namespace jp
 	public:
 		Jscpp() :jtree(NULL){}
 		Jscpp(std::string _root_key = "root");
-		virtual ~Jscpp(){}
+		~Jscpp()
+		{ 
+			if (jtree)
+			{
+				delete jtree;
+			}
+			jtree = NULL;
+		}
 
 		/* interface */
 	public:
@@ -107,7 +119,7 @@ namespace jp
 		bool save(char * file_path);
 
 		/* object io */
-		void set(int value, ...);
+		void set(JValueType jtype, ...);
 
 		/* other */
 		std::string travel(void);

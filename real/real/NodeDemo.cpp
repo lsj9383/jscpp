@@ -1,7 +1,7 @@
 #include "Jscpp.h"
 
 using namespace std;
-using namespace jp;
+using namespace jc;
 
 void NodeDemo(void)
 {

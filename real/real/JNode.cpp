@@ -1,16 +1,18 @@
 #include "Jscpp.h"
 
 using namespace std;
-using namespace jp;
+using namespace jc;
 
 JNode::~JNode()
 {
+	//强制性要求JNode为JObject时，无子节点时才进行释放。若有子节点，应该在外面释放完子节点，再释放该节点。
 	switch (mType)
 	{
 	case JINT	:	delete mValue.pInt;		break;
 	case JDOUBLE:	delete mValue.pDouble;	break;
 	case JSTRING:	delete mValue.pString;	break;
 	case JBOOL	:	delete mValue.pBool;	break;
+	case JOBJECT:	assert(mValue.pKeyValue->size() == 0); delete mValue.pKeyValue; break;
 	default:		break;
 	}
 }
@@ -41,7 +43,6 @@ void JNode::SetValue(const bool &val)
 	*this->mValue.pBool = val;
 	this->mType = JBOOL;
 }
-
 
 void JNode::SetValue(const vector<JNode *> &val)
 {
