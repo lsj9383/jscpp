@@ -6,10 +6,13 @@ using namespace jc;
 
 void NodeDemo(void);
 void JscppDemo(void);
+void FunctionDemo(void);
 
 int main(void)
 {
 //	NodeDemo();
 	JscppDemo();
+//	FunctionDemo();
+
 	return 0;
 }

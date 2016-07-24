@@ -31,15 +31,13 @@
 	struct JNode
 	{
 		string key;
-		UVal value;
-		ValueType type;
+		JVal value;
 	}
 	key是个string类型，指明了关键字。
-	value是个UVal类型，是个union，稍后定义。
-	type是个ValueType，是个enum，定义了value实际所用的类型，稍后定义。
+	value是个JVal类型，稍后定义，里面包含了值的类型与数据（指针）。
 	
-	2.UVal
-	union UVal
+	2.JData
+	union JData
 	{
 		int *pInt;
 		double *pDouble;
@@ -47,12 +45,12 @@
 		bool *pBool;
 		vector<node *> *pKeyValue;
 	}
-	所有的字段全是指针型，这样在内存中，Uval始终只会占一个地址的空间。
+	所有的字段全是指针型，这样在内存中，JVal始终只会占一个地址的空间。
 	需要注意的是，当type指示当前node为一个Json Object时，使用的指针是pKeyValue，这个指针中保存的指针是指向node数据的。
 	并且需要指出，当type指数当前node为一个Json Array时，只用的指针仍然为pKeyValue，因为可以认为数组是一个特殊的对象，特殊之处在于省略了key，并且key按顺序设置 。
 	
-	3.JValueType
-	enum JValueType
+	3.JType
+	enum JType
 	{
 		JINT,			//json int
 		JDOUBLE,		//json double
@@ -64,6 +62,14 @@
 	}
 	指示了node中的value可能的类型。
 	JNULL代指该node无可用value。
+	
+	4.JValue
+	struct JData
+	{
+		JType type;
+		JData data;
+	};
+	记录了一个数据的类型，以及数据的值（指针）。
 	
 二、关键类设计
 	以上是数据结构的一种逻辑组织，代码组织将其稍微变形

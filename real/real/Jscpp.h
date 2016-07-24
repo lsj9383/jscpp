@@ -7,9 +7,14 @@
 #include <string>
 #include <assert.h>
 
+/* function */
+std::deque<std::string> PathDeque(char* s1, ...);
+
 namespace jc
 {
 	class JNode;
+
+	/* enum unit */
 	enum JValueType
 	{
 		JINT,			//json int
@@ -21,6 +26,7 @@ namespace jc
 		JNULL			//json null
 	};
 
+	/* union unit */
 	union UVal
 	{
 		int *pInt;
@@ -30,6 +36,7 @@ namespace jc
 		std::vector<JNode *> *pKeyValue;
 	};
 
+	/* class unit */
 	class JNode
 	{
 		/* ctor and de-ctor*/
@@ -120,6 +127,7 @@ namespace jc
 
 		/* object io */
 		void set(JValueType jtype, ...);
+		void setByDeque(JValueType jtype, std::deque<std::string> path, UVal jval);
 
 		/* other */
 		std::string travel(void);

@@ -16,6 +16,11 @@ std::string Jscpp::travel(void)
 	return jtree->travel();
 }
 
+void Jscpp::setByDeque(JValueType jtype, std::deque<std::string> path, UVal jval)
+{
+	jtree->set(jtype, path, jval);
+}
+
 void Jscpp::set(JValueType jtype, ...)
 {
 	va_list pArg;
@@ -72,4 +77,22 @@ bool Jscpp::save(char * file_path)
 	ofs << s << endl;
 	ofs.close();
 	return true;
+}
+
+std::deque<std::string> PathDeque(char* s1, ...)
+{
+	va_list pArg;
+	va_start(pArg, s1);
+	deque<string> path(1, s1);
+	char * s = NULL;
+
+	do
+	{
+		s = va_arg(pArg, char *);
+		path.push_back(string(s));
+	} while (strcmp(s, ":"));
+	path.pop_back();			//把刚刚添加进去的":"弄出来
+	va_end(pArg);
+
+	return path;
 }
