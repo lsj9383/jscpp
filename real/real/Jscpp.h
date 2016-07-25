@@ -23,7 +23,6 @@ namespace jc
 		JSTRING,		//json string
 		JBOOL,			//json boolean
 		JOBJECT,		//json object
-		JARRAY,			//json array
 		JNULL			//json null
 	};
 

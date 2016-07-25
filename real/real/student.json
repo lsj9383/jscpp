@@ -3,9 +3,7 @@
       "name" : "lsj",
       "marry" : false,
       "birthday" : 
-      [1993,
-4,
-26
+      [1993,4,26
       ],
       "test" : 
       {
@@ -22,9 +20,7 @@
       "name" : "hjs",
       "marry" : true,
       "birthday" : 
-      [1992,
-7,
-16
+      [1992,7,16
       ],
       "test" : 
       {

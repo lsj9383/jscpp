@@ -57,11 +57,11 @@
 		JSTRING,		//json string
 		JBOOL,			//json boolean
 		JOBJECT,		//json object
-		JARRAY,			//json array
 		JNULL			//json null
 	}
 	指示了node中的value可能的类型。
 	JNULL代指该node无可用value。
+	这里面没有为数组留出类型位置，因为数组的判断可以通过关键词的前缀和内容进行判断。
 	
 	4.JValue
 	struct JVal
