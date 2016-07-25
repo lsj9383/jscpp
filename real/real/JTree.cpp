@@ -6,6 +6,7 @@ using namespace jc;
 
 
 //将int转换为字符串
+
 static string getstring(int n);
 static string getstring(double n);
 static string getstring(bool n);
@@ -13,13 +14,18 @@ static string prespace(int n);
 
 JTree::JTree(string _root_key)
 {
-	vector<JNode *> initKeyValue;
-	root = new JNode(_root_key, initKeyValue);
+	root = new JNode(_root_key);
+	root->InitObject();
 }
 
-void JTree::set(JValueType jtype, std::deque<std::string> path, UVal jval)
+void JTree::set(std::list<std::string> path, JVal jval)
 {
-	_set(root, jtype, path, jval);
+	_set(root, path, jval);
+}
+
+JVal JTree::get(std::list<std::string> path)
+{
+	return _get(root, path);
 }
 
 std::string JTree::travel(void)
@@ -28,33 +34,53 @@ std::string JTree::travel(void)
 	return _travel(root, 0);
 }
 
-void JTree::_set(JNode *cn, JValueType jtype, std::deque<std::string> path, UVal jval)
+JVal JTree::_get(JNode *cn, std::list<std::string> path)
 {
-	if (path.size() == 0)
+
+	if (path.size() == 0)		//到路径尾了
 	{
-		switch (jtype)
+		return cn->GetValue();
+	}
+
+	string key = path.front();
+	//搜索是否存在目标关键词
+	if (cn->GetValue().GetType() == JOBJECT)
+	{
+		for (int i = 0; i < cn->GetValue().GetData().pKeyValue->size(); i++)
 		{
-		case JINT	:	cn->SetValue(*jval.pInt);			break;
-		case JDOUBLE:	cn->SetValue(*jval.pDouble);		break;
-		case JBOOL	:	cn->SetValue(*jval.pBool);			break;
-		case JSTRING:	cn->SetValue(*jval.pString);		break;
-		default		:	assert(false);						break;
+			if (key == cn->GetValue().GetData().pKeyValue->at(i)->GetKey())
+			{
+				path.pop_front();
+				return _get(cn->GetValue().GetData().pKeyValue->at(i), path);
+			}
 		}
+	}
+
+	//get搜寻失败
+	assert(false);
+	return JVal();
+}
+
+void JTree::_set(JNode *cn, std::list<std::string> path, JVal jval)
+{
+	if (path.size() == 0)		//到路径尾了
+	{
+		cn->SetValue(jval);
 		return;
 	}
 
-	string key = path[0];
+	string key = path.front();
 	bool isExist = false;
 	JNode *nextJNode = NULL;
 
 	//搜索是否存在目标关键词
-	if (cn->GetType() == JOBJECT)
+	if (cn->GetValue().GetType() == JOBJECT)
 	{
-		for (int i = 0; i < cn->GetValue().pKeyValue->size(); i++)
+		for (int i = 0; i < cn->GetValue().GetData().pKeyValue->size(); i++)
 		{
-			if (key == cn->GetValue().pKeyValue->at(i)->GetKey())
+			if (key == cn->GetValue().GetData().pKeyValue->at(i)->GetKey())
 			{
-				nextJNode = cn->GetValue().pKeyValue->at(i);
+				nextJNode = cn->GetValue().GetData().pKeyValue->at(i);
 				isExist = true;
 			}
 		}
@@ -63,18 +89,16 @@ void JTree::_set(JNode *cn, JValueType jtype, std::deque<std::string> path, UVal
 	//根据关键词进行创建
 	if (!isExist)
 	{
-		JNode *newJNode = new JNode(key);
-		vector<JNode*> initKeyValue;
+		nextJNode = new JNode(key);
 
-		if (path.size() > 1)				//大于1时说明后面还有对象.因此需要把后面的内容设置为
+		if (path.size() > 1)					//大于1时说明后面还有对象.
 		{
-			newJNode->SetValue(initKeyValue);
+			nextJNode->InitObject();			//因此newJNode的value应该是object.
 		}
-		nextJNode = newJNode;
 
-		if (cn->GetType() == JOBJECT)		
-		{ 
-			cn->AddObject(newJNode);		//当前节点为对象时
+		if (cn->GetValue().GetType() == JOBJECT)
+		{
+			cn->AddObject(nextJNode);		//当前节点为对象时
 		}
 		else
 		{
@@ -84,7 +108,7 @@ void JTree::_set(JNode *cn, JValueType jtype, std::deque<std::string> path, UVal
 
 	//递归
 	path.pop_front();
-	_set(nextJNode, jtype, path, jval);
+	_set(nextJNode, path, jval);
 }
 
 std::string JTree::_travel(JNode *cnode, int deep)
@@ -92,17 +116,17 @@ std::string JTree::_travel(JNode *cnode, int deep)
 	assert(cnode != NULL);	//确保jtree不为空，才可以遍历
 	string retString;
 
-	if (cnode->GetType() == JOBJECT)
+	if (cnode->GetValue().GetType() == JOBJECT)
 	{
 		if (deep != 0)
 			retString = "\n";
 		retString += prespace(deep*3) + "{\n";
-		for (int i = 0; i < cnode->GetValue().pKeyValue->size(); i++)
+		for (int i = 0; i < cnode->GetValue().GetData().pKeyValue->size(); i++)
 		{
-			retString = retString + prespace((deep+1) * 3) + "\"" + cnode->GetValue().pKeyValue->at(i)->GetKey() + "\" : ";
-			retString += _travel(cnode->GetValue().pKeyValue->at(i), deep+1);
+			retString = retString + prespace((deep+1) * 3) + "\"" + cnode->GetValue().GetData().pKeyValue->at(i)->GetKey() + "\" : ";
+			retString += _travel(cnode->GetValue().GetData().pKeyValue->at(i), deep+1);
 			//key:value间的分隔符
-			if (i != cnode->GetValue().pKeyValue->size() - 1)
+			if (i != cnode->GetValue().GetData().pKeyValue->size() - 1)
 			{
 				retString += ",";
 			}
@@ -112,12 +136,12 @@ std::string JTree::_travel(JNode *cnode, int deep)
 	}
 	else
 	{
-		switch (cnode->GetType())
+		switch (cnode->GetValue().GetType())
 		{
-		case JINT	: retString = getstring((int)*cnode->GetValue().pInt); break;
-		case JDOUBLE: retString = getstring((double)*cnode->GetValue().pDouble); break;
-		case JBOOL	: retString = getstring((bool)*cnode->GetValue().pBool); break;
-		case JSTRING: retString = "\"" + *cnode->GetValue().pString + "\""; break;
+		case JINT	: retString = getstring((int)*cnode->GetValue().GetData().pInt); break;
+		case JDOUBLE: retString = getstring((double)*cnode->GetValue().GetData().pDouble); break;
+		case JBOOL: retString = getstring((bool)*cnode->GetValue().GetData().pBool); break;
+		case JSTRING: retString = "\"" + *cnode->GetValue().GetData().pString + "\""; break;
 		}
 	}
 
@@ -127,12 +151,12 @@ std::string JTree::_travel(JNode *cnode, int deep)
 void JTree::_freeTree(JNode *cn)
 {
 	//为JObject类型，应该释放完其子节点.
-	if (cn->GetType() == JOBJECT)
+	if (cn->GetValue().GetType() == JOBJECT)
 	{
-		for (int i = cn->GetValue().pKeyValue->size()-1; i >= 0; i--)
+		for (int i = cn->GetValue().GetData().pKeyValue->size()-1; i >= 0; i--)
 		{ 
-			_freeTree(cn->GetValue().pKeyValue->at(i));			//释放掉第i各节点.
-			cn->GetValue().pKeyValue->pop_back();				//将第i个节点的指针从vector中排出.
+			_freeTree(cn->GetValue().GetData().pKeyValue->at(i));			//释放掉第i各节点.
+			cn->GetValue().GetData().pKeyValue->pop_back();				//将第i个节点的指针从vector中排出.
 		}
 	}
 

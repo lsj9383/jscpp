@@ -16,56 +16,15 @@ std::string Jscpp::travel(void)
 	return jtree->travel();
 }
 
-void Jscpp::setByDeque(JValueType jtype, std::deque<std::string> path, UVal jval)
+void Jscpp::set(std::list<std::string> path, JVal jval)
 {
-	jtree->set(jtype, path, jval);
+	jtree->set(path, jval);
 }
 
-void Jscpp::set(JValueType jtype, ...)
+JVal Jscpp::get(std::list<std::string> path)
 {
-	va_list pArg;
-	va_start(pArg, jtype);
-	deque<string> path;
-	char * s = NULL;
-	UVal jval;
-
-	do
-	{
-		s = va_arg(pArg, char *);
-		path.push_back(string(s));
-	} while (strcmp(s, ":"));
-	path.pop_back();			//把刚刚添加进去的":"弄出来
-
-	//allocate memroy and set value.
-	switch (jtype)
-	{
-	case JINT:	
-		jval.pInt = new int;  *jval.pInt = va_arg(pArg, int);			
-		break;
-	case JDOUBLE:	
-		jval.pDouble = new double; *jval.pDouble = va_arg(pArg, double);
-		break;
-	case JBOOL:	
-		jval.pBool = new bool; *jval.pBool = va_arg(pArg, bool);		
-		break;
-	case JSTRING:	
-		jval.pString = new string; *jval.pString = va_arg(pArg, string); 
-		break;
-	default:	break;
-	}
-	va_end(pArg);
-
-	jtree->set(jtype, path, jval);
-
-	//release memory.
-	switch (jtype)
-	{
-	case JINT	:	delete jval.pInt;		break;
-	case JDOUBLE:	delete jval.pDouble;	break;
-	case JBOOL	:	delete jval.pBool;		break;
-	case JSTRING:	delete jval.pString;	break;
-	default:	break;
-	}
+	assert(jtree);
+	return jtree->get(path);
 }
 
 bool Jscpp::save(char * file_path)
@@ -79,11 +38,11 @@ bool Jscpp::save(char * file_path)
 	return true;
 }
 
-std::deque<std::string> PathDeque(char* s1, ...)
+std::list<std::string> JPath(char* s1, ...)
 {
 	va_list pArg;
 	va_start(pArg, s1);
-	deque<string> path(1, s1);
+	list<string> path(1, s1);
 	char * s = NULL;
 
 	do
