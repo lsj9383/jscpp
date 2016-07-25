@@ -55,3 +55,10 @@ std::list<std::string> JPath(char* s1, ...)
 
 	return path;
 }
+
+char * JIndex(int index)
+{
+	char *s = new char [256];
+	sprintf_s(s, 256, "##%d", index);
+	return s;
+}

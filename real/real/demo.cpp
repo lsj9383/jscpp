@@ -15,33 +15,38 @@ void NodeDemo(void)
 
 void JscppDemo(void)
 {
+	int index;
+
 	Jscpp *jscpp = new Jscpp("student");
-	jscpp->set(JPath("name", ":"), string("lsj"));
-	jscpp->set(JPath("code", ":"), 7);
-	jscpp->set(JPath("age", ":"), 23);
-	jscpp->set(JPath("man", ":"), true);
-	jscpp->set(JPath("marry", ":"), false);
-	jscpp->set(JPath("test", "pass", ":"), true);
-	jscpp->set(JPath("test", "grade", "chinese", ":"), 89.0);
-	jscpp->set(JPath("test", "grade", "math", ":"), 115.5);
-	jscpp->set(JPath("test", "grade", "english", ":"), 103.1);
-	jscpp->set(JPath("test", "grade", "phy", ":"), 98.0);
 
-	cout << *jscpp->get(JPath("test", "pass", ":")).GetData().pBool << endl;
-	cout << *jscpp->get(JPath("test", "grade", "phy", ":")).GetData().pDouble << endl;
-	cout << *jscpp->get(JPath("name", ":")).GetData().pString << endl;
-//	cout << *jscpp->get(JPath("test", "pass", "phy", ":")).GetData().pBool << endl;		//error
+	//set test
+	index = 0;
+	jscpp->set(JPath(JIndex(index), "name", ":"), string("lsj"));
+	jscpp->set(JPath(JIndex(index), "marry", ":"), false);
+	jscpp->set(JPath(JIndex(index), "birthday", JIndex(0), ":"), 1993);
+	jscpp->set(JPath(JIndex(index), "birthday", JIndex(1), ":"), 4);
+	jscpp->set(JPath(JIndex(index), "birthday", JIndex(2), ":"), 26);
+	jscpp->set(JPath(JIndex(index), "test", "pass", ":"), true);
+	jscpp->set(JPath(JIndex(index), "test", "grade", "chinese", ":"), 89.0);
+	jscpp->set(JPath(JIndex(index), "test", "grade", "math", ":"), 115.5);
+	jscpp->set(JPath(JIndex(index), "test", "grade", "english", ":"), 103.1);
+
+	index = 1;
+	jscpp->set(JPath(JIndex(index), "name", ":"), string("hjs"));
+	jscpp->set(JPath(JIndex(index), "marry", ":"), true);
+	jscpp->set(JPath(JIndex(index), "birthday", JIndex(0), ":"), 1992);
+	jscpp->set(JPath(JIndex(index), "birthday", JIndex(1), ":"), 7);
+	jscpp->set(JPath(JIndex(index), "birthday", JIndex(2), ":"), 16);
+	jscpp->set(JPath(JIndex(index), "test", "pass", ":"), false);
+	jscpp->set(JPath(JIndex(index), "test", "grade", "chinese", ":"), 99.0);
+	jscpp->set(JPath(JIndex(index), "test", "grade", "math", ":"), 125.5);
+	jscpp->set(JPath(JIndex(index), "test", "grade", "english", ":"), 43.1);
+
+	//travel test
 	cout << jscpp->travel() << endl;
+
+
+	//file test
 	jscpp->save("student.json");
-
-	delete jscpp;
-}
-
-void FunctionDemo(void){
-	/*
-	deque<string> path = PathDeque("fei", "ji", "da", "pao", ":");
-	for (int i = 0; i < path.size(); i++){
-	cout << path[i] << endl;
-	}
-	*/
+ 	delete jscpp;
 }

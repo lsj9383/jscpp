@@ -9,6 +9,7 @@
 
 /* function */
 std::list<std::string> JPath(char* s1, ...);
+char * JIndex(int index);
 
 namespace jc
 {

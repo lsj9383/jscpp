@@ -26,7 +26,7 @@
 
 二、关键数据结构：
 	(以下程序只是个逻辑表示，并不代表能运行)
-	1.JNode
+	1.JNode, json node
 	key:value数据用一个node来进行表示
 	struct JNode
 	{
@@ -36,7 +36,7 @@
 	key是个string类型，指明了关键字。
 	value是个JVal类型，稍后定义，里面包含了值的类型与数据（指针）。
 	
-	2.JData
+	2.JData, json data
 	union JData
 	{
 		int *pInt;
@@ -64,7 +64,7 @@
 	JNULL代指该node无可用value。
 	
 	4.JValue
-	struct JData
+	struct JVal
 	{
 		JType type;
 		JData data;
@@ -73,17 +73,26 @@
 	
 二、关键类设计
 	以上是数据结构的一种逻辑组织，代码组织将其稍微变形
-	1.JNode
+	1.JVal
+		构造函数:
+			JVal(data),初始化value的值，类型会根据值而自信确定。
+		接口:
+			SetData(data), 拷贝value的值到JVal对象中，类型会根据值而自行确定。
+		应该指出，JVal支持int double bool string vector<JNode*> 到 JVal的隐式转换。
+		
+	2.JNode
 		构造函数
-			JNode(key, value);建立一个key:value的node， type会根据value自行设置。
-			JNode();建立一个key:value都为空，type为JNULL的node。
+			JNode(key, value);建立一个key:value的node.
+				需要注意，这里的value是JVal类型，并且支持隐式转换。
+			JNode();建立一个key:value为空的node.
 		接口:
 			SetKey(Key), 重新设置key。
-			SetValue(value), 重新设置value，type会根据value自行设置。
+			SetValue(value), 重新设置JVal类型的value，支持隐式转换。
+			AddObject(newObject), 给JNode添加新的对象，也就是一个Node
 		析构：
 			在JNode释放时，将会自动释放掉里面value的空间。
 			
-	2.JTree
+	3.JTree
 		用于管理node的树空间。这是一个多叉树。
 		树的节点有三种类型:
 			1、叶子节点(非JOBJECT 非ARRAY型节点)。
@@ -99,7 +108,7 @@
 					key:...
 				}
 				其中的...由递归进行打印。
-	3.Jscpp
+	4.Jscpp
 		Jscpp是作为包装代理类的概念存在的，封装了对JTree的操作，使接口更为人性化，用户不用直接对JTree进行操作。
 		
 		
@@ -110,7 +119,7 @@
 		cn，为当前node
 		path，是当前node剩下的路径，其中path[0]应该为cn的某个子节点。若path为0，那么就将jvalue直接设置在cn中。
 		jvalue，要设置的值。
-		void JTree::_set(JNode *cn, deque path, UVal jvalue)
+		void JTree::_set(JNode *cn, deque path, JVal jvalue)
 		{
 			//由于路径已空，因此就是将当前cn的值进行设置。也是递归结束条件。
 			if(path.size()==0)

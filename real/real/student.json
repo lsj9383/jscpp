@@ -1,18 +1,40 @@
-{
-   "name" : "lsj",
-   "code" : 7,
-   "age" : 23,
-   "man" : true,
-   "marry" : false,
-   "test" : 
+[
    {
-      "pass" : true,
-      "grade" : 
+      "name" : "lsj",
+      "marry" : false,
+      "birthday" : 
+      [1993,
+4,
+26
+      ],
+      "test" : 
       {
-         "chinese" : 89,
-         "math" : 115.5,
-         "english" : 103.1,
-         "phy" : 98
+         "pass" : true,
+         "grade" : 
+         {
+            "chinese" : 89,
+            "math" : 115.5,
+            "english" : 103.1
+         }
+      }
+   },
+   {
+      "name" : "hjs",
+      "marry" : true,
+      "birthday" : 
+      [1992,
+7,
+16
+      ],
+      "test" : 
+      {
+         "pass" : false,
+         "grade" : 
+         {
+            "chinese" : 99,
+            "math" : 125.5,
+            "english" : 43.1
+         }
       }
    }
-}
+]

@@ -7,6 +7,7 @@ using namespace jc;
 
 //将int转换为字符串
 
+static bool isArray(JNode *jn);
 static string getstring(int n);
 static string getstring(double n);
 static string getstring(bool n);
@@ -118,21 +119,44 @@ std::string JTree::_travel(JNode *cnode, int deep)
 
 	if (cnode->GetValue().GetType() == JOBJECT)
 	{
-		if (deep != 0)
-			retString = "\n";
-		retString += prespace(deep*3) + "{\n";
-		for (int i = 0; i < cnode->GetValue().GetData().pKeyValue->size(); i++)
-		{
-			retString = retString + prespace((deep+1) * 3) + "\"" + cnode->GetValue().GetData().pKeyValue->at(i)->GetKey() + "\" : ";
-			retString += _travel(cnode->GetValue().GetData().pKeyValue->at(i), deep+1);
-			//key:value间的分隔符
-			if (i != cnode->GetValue().GetData().pKeyValue->size() - 1)
+		if (!isArray(cnode))
+		{	//非数组
+			if (deep != 0)
+				retString = "\n";
+			retString += prespace(deep * 3) + "{\n";
+			for (int i = 0; i < cnode->GetValue().GetData().pKeyValue->size(); i++)
 			{
-				retString += ",";
+				retString = retString + prespace((deep + 1) * 3) + "\"" + cnode->GetValue().GetData().pKeyValue->at(i)->GetKey() + "\" : ";
+				retString += _travel(cnode->GetValue().GetData().pKeyValue->at(i), deep + 1);
+				//key:value间的分隔符
+				if (i != cnode->GetValue().GetData().pKeyValue->size() - 1)
+				{
+					retString += ",";
+				}
+				retString += "\n";
 			}
-			retString += "\n";
+			retString += prespace(deep * 3) + "}";
 		}
-		retString += prespace(deep * 3) + "}";
+		else
+		{	//数组，注意数组也属于JOBJECT，只是key比较特殊
+			if (deep != 0)
+				retString = "\n";
+			retString += prespace(deep * 3) + "[";
+			for (int i = 0; i < cnode->GetValue().GetData().pKeyValue->size(); i++)
+			{
+				retString += _travel(cnode->GetValue().GetData().pKeyValue->at(i), deep + 1);
+				//key:value间的分隔符
+				if (i != cnode->GetValue().GetData().pKeyValue->size() - 1)
+				{
+					retString += ",";
+				}
+				else
+				{
+					retString += "\n";
+				}
+			}
+			retString += prespace(deep * 3) + "]";
+		}
 	}
 	else
 	{
@@ -192,4 +216,36 @@ static string prespace(int n)
 		ret += " ";
 	}
 	return ret;
+}
+
+static bool isnum(string s)
+{
+	stringstream sin(s);
+	double t;
+	char p;
+	if (!(sin >> t))
+		return false;
+	if (sin >> p)
+		return false;
+	else
+		return true;
+}
+
+static bool isArray(JNode *jn)
+{
+	assert(jn->GetValue().GetType() == JOBJECT);
+
+	for (int i = 0; i < jn->GetValue().GetData().pKeyValue->size(); i++)
+	{
+		if (jn->GetValue().GetData().pKeyValue->at(i)->GetKey().length() < 3)	return false;
+		string s = jn->GetValue().GetData().pKeyValue->at(i)->GetKey();
+		if (s[0] == '#' && s[1] == '#')
+		{	//前缀正确
+			return isnum(s.substr(2, s.size() - 2));
+		}
+		else
+		{
+			return false;
+		}
+	}
 }
