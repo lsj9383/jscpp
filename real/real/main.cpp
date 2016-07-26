@@ -5,13 +5,15 @@ using namespace std;
 using namespace jc;
 
 void NodeDemo(void);
-void JscppDemo(void);
+void JscppDemo1(void);
+void JscppDemo2(void);
 
 int main(void)
 {
 //	NodeDemo();
-	JscppDemo();
-//	FunctionDemo();
+//	JscppDemo1();
+
+	JscppDemo2();
 
 	return 0;
 }

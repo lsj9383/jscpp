@@ -19,23 +19,23 @@ JTree::JTree(string _root_key)
 	root->InitObject();
 }
 
-void JTree::set(std::list<std::string> path, JVal jval)
+void JTree::set(std::list<std::string> path, const JVal &jval)
 {
 	_set(root, path, jval);
 }
 
-JVal JTree::get(std::list<std::string> path)
+const JVal &JTree::get(std::list<std::string> path) const
 {
 	return _get(root, path);
 }
 
-std::string JTree::travel(void)
+std::string JTree::travel(void) const
 {
 	assert(root != NULL);	//确保jtree不为空，才可以遍历
 	return _travel(root, 0);
 }
 
-JVal JTree::_get(JNode *cn, std::list<std::string> path)
+const JVal &JTree::_get(JNode *cn, std::list<std::string> path) const
 {
 
 	if (path.size() == 0)		//到路径尾了
@@ -44,15 +44,17 @@ JVal JTree::_get(JNode *cn, std::list<std::string> path)
 	}
 
 	string key = path.front();
+	const vector<JNode*> *jobjects = cn->GetValue().GetData().pKeyValue;
+
 	//搜索是否存在目标关键词
 	if (cn->GetValue().GetType() == JOBJECT)
 	{
-		for (int i = 0; i < cn->GetValue().GetData().pKeyValue->size(); i++)
+		for (int i = 0; i < jobjects->size(); i++)
 		{
-			if (key == cn->GetValue().GetData().pKeyValue->at(i)->GetKey())
+			if (key == jobjects->at(i)->GetKey())
 			{
 				path.pop_front();
-				return _get(cn->GetValue().GetData().pKeyValue->at(i), path);
+				return _get(jobjects->at(i), path);
 			}
 		}
 	}
@@ -62,7 +64,7 @@ JVal JTree::_get(JNode *cn, std::list<std::string> path)
 	return JVal();
 }
 
-void JTree::_set(JNode *cn, std::list<std::string> path, JVal jval)
+void JTree::_set(JNode *cn, std::list<std::string> path, const JVal &jval)
 {
 	if (path.size() == 0)		//到路径尾了
 	{
@@ -112,7 +114,7 @@ void JTree::_set(JNode *cn, std::list<std::string> path, JVal jval)
 	_set(nextJNode, path, jval);
 }
 
-std::string JTree::_travel(JNode *cnode, int deep)
+std::string JTree::_travel(JNode *cnode, int deep) const
 {
 	assert(cnode != NULL);	//确保jtree不为空，才可以遍历
 	string retString;

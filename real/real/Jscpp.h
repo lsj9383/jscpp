@@ -52,15 +52,17 @@ namespace jc
 
 		/* interface */
 	public:
-		JType GetType(){ return mType; }
-		JData GetData(){ return mData; }
+		JVal& operator=(const JVal &_value){ SetData(_value); return *this; }
 
-		void SetData(const JVal &val);
-		void SetData(const int &val);
-		void SetData(const double &val);
-		void SetData(const std::string &val);
-		void SetData(const bool &val);
-		void SetData(const std::vector<JNode *> &val);
+		const JType& GetType() const { return mType; }
+		const JData& GetData() const { return mData; }
+
+		void SetData(const JVal &val);						//保证相同的独立的JVal值.
+		void SetData(const int &val);						//保证相同的独立的int值.
+		void SetData(const double &val);					//保证相同的独立的double值.
+		void SetData(const std::string &val);				//保证相同的独立的string值.
+		void SetData(const bool &val);						//保证相同的独立的bool值.
+		void SetData(const std::vector<JNode *> &val);		//保证相同的独立的vector中的指针值.
 
 	private:
 		JType mType;
@@ -71,16 +73,14 @@ namespace jc
 	{
 		/* ctor and de-ctor*/
 	public:
-		JNode(){ }
-		JNode(std::string _key):mKey(_key){ }
-		JNode(std::string _key, const JVal &_value) : mKey(_key){ SetValue(_value); }
-		~JNode(){ }
+		JNode(const std::string &_key):mKey(_key){ }
+		JNode(const std::string &_key, const JVal &_value) : mKey(_key){ SetValue(_value); }
 
 		/* interface */
 	public:
 		/* IO */
-		std::string GetKey(){ return mKey; }
-		JVal GetValue(){ return mVal; }
+		const std::string &GetKey() const{ return mKey; }
+		const JVal& GetValue() const { return mVal; }
 
 		void SetKey(std::string k){ mKey = k; }
 		void SetValue(const JVal &val){ mVal.SetData(val); }
@@ -102,7 +102,9 @@ namespace jc
 		/* ctor and de-ctor */
 	public:
 		JTree() :root(NULL){}
-		JTree(std::string _root_key = "root");
+		explicit JTree(std::string _root_key = "root");
+		JTree(const JTree &jtree) = delete;
+
 		~JTree()
 		{
 			_freeTree(root);
@@ -111,17 +113,17 @@ namespace jc
 
 		/* interface */
 	public:
-		void set(std::list<std::string> path, JVal jval);
-		JVal get(std::list<std::string> path);
-
-		std::string travel(void);
+		JTree& operator=(const JTree& jtree) = delete;
+		void set(std::list<std::string> path, const JVal &jval);
+		const JVal &get(std::list<std::string> path) const;
+		std::string travel(void) const ;
 
 		/* member fun */
 	private:
-		void _set(JNode *cnode, std::list<std::string> path, JVal jval);
-		JVal _get(JNode *cnode, std::list<std::string> path);
+		void _set(JNode *cnode, std::list<std::string> path, const JVal &jval);
+		const JVal &_get(JNode *cnode, std::list<std::string> path) const;
+		std::string _travel(JNode *cnode, int deep) const;
 
-		std::string _travel(JNode *cnode, int deep);
 		void _freeTree(JNode *cn);
 
 		/* member var */
@@ -134,7 +136,9 @@ namespace jc
 		/* ctor and de-ctor */
 	public:
 		Jscpp() :jtree(NULL){}
-		Jscpp(std::string _root_key = "root");
+		explicit Jscpp(std::string _root_key = "root");
+		Jscpp(const Jscpp &jscpp) = delete;
+
 		~Jscpp()
 		{ 
 			if (jtree)
@@ -146,15 +150,17 @@ namespace jc
 
 		/* interface */
 	public:
+		const Jscpp& operator=(const Jscpp &jscpp) = delete;
+
 		/* file io */
 		bool save(char * file_path);
 
 		/* object io */
-		void set(std::list<std::string> path, JVal jval);
-		JVal get(std::list<std::string> path);
+		void set(std::list<std::string> path, const JVal &jval);
+		const JVal& get(std::list<std::string> path) const;
 
 		/* other */
-		std::string travel(void);
+		std::string travel(void) const;
 		/* member fun */
 
 		/* member var */

@@ -10,18 +10,18 @@ Jscpp::Jscpp(string _root_key)
 	jtree = new JTree(_root_key);
 }
 
-std::string Jscpp::travel(void)
+std::string Jscpp::travel(void) const
 {
 	assert(jtree!=NULL);	//确保jtree不为空，才可以遍历
 	return jtree->travel();
 }
 
-void Jscpp::set(std::list<std::string> path, JVal jval)
+void Jscpp::set(std::list<std::string> path, const JVal &jval)
 {
 	jtree->set(path, jval);
 }
 
-JVal Jscpp::get(std::list<std::string> path)
+const JVal &Jscpp::get(std::list<std::string> path) const
 {
 	assert(jtree);
 	return jtree->get(path);
