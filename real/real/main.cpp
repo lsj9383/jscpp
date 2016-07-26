@@ -13,7 +13,7 @@ int main(void)
 //	NodeDemo();
 //	JscppDemo1();
 
-	JscppDemo2();
+	JscppDemo1();
 
 	return 0;
 }

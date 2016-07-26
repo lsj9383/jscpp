@@ -85,5 +85,11 @@ void JscppDemo2(void)
 	cout << *jscpp->get(JPath(JIndex(1), "name", ":")).GetData().pString << endl;
 	cout << *jscpp->get(JPath(JIndex(1), "test", "grade", "chinese", ":")).GetData().pDouble << endl;
 
+//	cout << jscpp->isAt(JPath(JIndex(1), "test", "grade", "chinese", ":")).GetData().pDouble << endl;
+	cout << jscpp->isAt(JPath(JIndex(0), "name", ":")) << endl;
+	cout << jscpp->isAt(JPath(JIndex(0), "name0", ":")) << endl;
+	cout << jscpp->isAt(JPath(JIndex(2), "name", ":")) << endl;
+	cout << jscpp->isAt(JPath(JIndex(0), "test", "grade", ":")) << endl;
+
 	delete jscpp;
 }

@@ -116,12 +116,14 @@ namespace jc
 		JTree& operator=(const JTree& jtree) = delete;
 		void set(std::list<std::string> path, const JVal &jval);
 		const JVal &get(std::list<std::string> path) const;
+		bool isAt(std::list<std::string> path) const;
 		std::string travel(void) const ;
-
+		
 		/* member fun */
 	private:
 		void _set(JNode *cnode, std::list<std::string> path, const JVal &jval);
 		const JVal &_get(JNode *cnode, std::list<std::string> path) const;
+		bool _isAt(JNode *cnode, std::list<std::string> path) const;
 		std::string _travel(JNode *cnode, int deep) const;
 
 		void _freeTree(JNode *cn);
@@ -154,10 +156,12 @@ namespace jc
 
 		/* file io */
 		bool save(char * file_path);
+		bool load(char *file_path);
 
 		/* object io */
 		void set(std::list<std::string> path, const JVal &jval);
 		const JVal& get(std::list<std::string> path) const;
+		bool isAt(std::list<std::string> path) const;
 
 		/* other */
 		std::string travel(void) const;

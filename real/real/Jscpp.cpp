@@ -10,6 +10,22 @@ Jscpp::Jscpp(string _root_key)
 	jtree = new JTree(_root_key);
 }
 
+bool Jscpp::load(char *file_path)
+{
+	return false;
+}
+
+bool Jscpp::save(char * file_path)
+{
+	if (jtree == NULL)	return false;
+
+	ofstream ofs(file_path);
+	string s = travel();
+	ofs << s << endl;
+	ofs.close();
+	return true;
+}
+
 std::string Jscpp::travel(void) const
 {
 	assert(jtree!=NULL);	//确保jtree不为空，才可以遍历
@@ -27,15 +43,10 @@ const JVal &Jscpp::get(std::list<std::string> path) const
 	return jtree->get(path);
 }
 
-bool Jscpp::save(char * file_path)
+bool Jscpp::isAt(std::list<std::string> path) const
 {
-	if (jtree == NULL)	return false;
-
-	ofstream ofs(file_path);
-	string s = travel();
-	ofs << s << endl;
-	ofs.close();
-	return true;
+	assert(jtree);
+	return jtree->isAt(path);
 }
 
 std::list<std::string> JPath(char* s1, ...)

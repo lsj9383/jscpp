@@ -29,6 +29,11 @@ const JVal &JTree::get(std::list<std::string> path) const
 	return _get(root, path);
 }
 
+bool JTree::isAt(std::list<std::string> path) const
+{
+	return _isAt(root, path);
+}
+
 std::string JTree::travel(void) const
 {
 	assert(root != NULL);	//确保jtree不为空，才可以遍历
@@ -37,7 +42,6 @@ std::string JTree::travel(void) const
 
 const JVal &JTree::_get(JNode *cn, std::list<std::string> path) const
 {
-
 	if (path.size() == 0)		//到路径尾了
 	{
 		return cn->GetValue();
@@ -62,6 +66,34 @@ const JVal &JTree::_get(JNode *cn, std::list<std::string> path) const
 	//get搜寻失败
 	assert(false);
 	return JVal();
+}
+
+bool JTree::_isAt(JNode *cn, std::list<std::string> path) const
+{
+	//找到path都没了都有，那就证明这条路径是存在的
+	if (path.size() == 0)
+	{
+		return true;
+	}
+
+	string key = path.front();
+	const vector<JNode*> *jobjects = cn->GetValue().GetData().pKeyValue;
+
+	//搜索是否存在目标关键词
+	if (cn->GetValue().GetType() == JOBJECT)
+	{
+		for (int i = 0; i < jobjects->size(); i++)
+		{
+			if (key == jobjects->at(i)->GetKey())
+			{
+				path.pop_front();
+				return _isAt(jobjects->at(i), path);
+			}
+		}
+	}
+
+	//get搜寻失败
+	return false;
 }
 
 void JTree::_set(JNode *cn, std::list<std::string> path, const JVal &jval)
