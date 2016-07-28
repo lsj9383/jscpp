@@ -1,12 +1,15 @@
 #include <stdarg.h>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include "Jscpp.h"
 
 using namespace std;
 using namespace jc;
 
-static bool resloveStringObject(const string &scontent, vector<string> &skeys, vector<string> &svalues);
+static bool parseStringObject(const string &scontent, vector<string> &skeys, vector<string> &svalues);
+static void JPathJValueTransfer(const vector<string> &jpaths_jvalues, vector<list<string>> &jpaths, vector<JVal> &jvals);
+static bool isnum(string s);
 
 Jscpp::Jscpp(string _root_key)
 {
@@ -17,36 +20,33 @@ bool Jscpp::load(char *file_path)
 {
 	ifstream ifs(file_path);
 	string sbuf, s;
-	vector<list<string>> jpaths;
+	vector<string> jpaths_jvalues;
 	vector<JVal> jvals;
-	vector<string> skeys;
-	vector<string> svalues;
+	vector<list<string>> jpaths;
+
 
 	//缓存整个文件数据到字符串s中
 	while (ifs >> sbuf)
 	{
 		s += sbuf;
 	}
+	if (s.length() == 0)	return false;
 
-	//
-	//	_findKeyValue(jpaths, jvals);
-	resloveStringObject(s, skeys, svalues);
-	for (int i = 0; i < skeys.size(); i++)
-	{
-		cout << i << " : " << skeys[i] << " - " << svalues[i] << endl;
-	}
+	jpaths_jvalues = _JPathsJValues(s, string());		//将s中的所有路径与值提取出来，字符串形式
+	JPathJValueTransfer(jpaths_jvalues, jpaths, jvals);	//将字符串形式的path value转换为JPath和JValue格式
 
-	/*
+
+	//将path value添加到对象中
 	auto jpaths_ite = jpaths.cbegin();
 	auto jvals_ite = jvals.cbegin();
 
 	for (;	jpaths_ite!= jpaths.cend() &&
 	jvals_ite != jvals.cend();		jpaths_ite++, jvals_ite++)
 	{
-	jtree->set(*jpaths_ite, *jvals_ite);
+		jtree->set(*jpaths_ite, *jvals_ite);
 	}
-	*/
 
+	//结束
 	ifs.close();
 	return true;
 }
@@ -85,10 +85,34 @@ bool Jscpp::isAt(std::list<std::string> path) const
 	return jtree->isAt(path);
 }
 
-bool Jscpp::_findPathValue( vector<list<string>> &jpaths, vector<JVal> &jvals)
+vector<string> Jscpp::_JPathsJValues(std::string s, std::string &ppaths)
 {
+	vector<string> ret;
 
-	return false;
+	if (s.front() == '{' && s.back() == '}')
+	{	/* JObject */
+		vector<string> subret;
+		vector<string> svals;
+		vector<string> cpaths;		//child paths
+
+		//解析对象s，得到它的子key以及对应的value的字符串
+		parseStringObject(s, cpaths, svals);
+
+		for (int i = 0; i < cpaths.size(); i++)
+		{
+			subret = _JPathsJValues(svals[i], ppaths + " " + cpaths[i]);
+			for (int j = 0; j < subret.size(); j++)
+			{
+				ret.push_back(subret[j]);
+			}
+		}
+	}
+	else
+	{	/* JValue */
+		ret.push_back(ppaths + " : " + s);
+	}
+
+	return ret;
 }
 
 std::list<std::string> JPath(char* s1, ...)
@@ -118,7 +142,7 @@ char * JIndex(int index)
 
 
 //解析字符串形式的对象，将其中的关键词和对应的value以string的形式保存下来
-static bool resloveStringObject(const string &scontent, vector<string> &skeys, vector<string> &svalues)
+static bool parseStringObject(const string &scontent, vector<string> &skeys, vector<string> &svalues)
 {
 	const char *content = scontent.c_str();
 	vector<int> indexs;
@@ -169,4 +193,66 @@ static bool resloveStringObject(const string &scontent, vector<string> &skeys, v
 	}
 
 	return true;
+}
+
+static void JPathJValueTransfer(const vector<string> &jpaths_jvalues, vector<list<string>> &jpaths, vector<JVal> &jvals)
+{
+	for (int i = 0; i < jpaths_jvalues.size(); i++)
+	{
+		string sbuf;
+		list<string> jpath;
+		JVal jval;
+
+		istringstream ss(jpaths_jvalues[i]);		//transform to istringstream!
+
+		//1).读取得到路径
+		while (ss >> sbuf)
+		{
+			if (sbuf != ":")
+			{
+				jpath.push_back(sbuf);
+			}
+			else
+				break;
+		}
+
+		//2).读取值
+		ss >> sbuf;
+		if (isnum(sbuf))
+		{
+			jval.SetData(stod(sbuf));
+		}
+
+		if (sbuf == "true")
+		{
+			jval.SetData(true);
+		}
+
+		if (sbuf == "false")
+		{
+			jval.SetData(false);
+		}
+
+		if (sbuf.front()=='"' && sbuf.back()=='"')
+		{
+			jval.SetData(sbuf.substr(1, sbuf.length()-2));
+		}
+
+		//3).保存值与路径
+		jpaths.push_back(jpath);
+		jvals.push_back(jval);
+	}
+}
+
+static bool isnum(string s)
+{
+	stringstream sin(s);
+	double t;
+	char p;
+	if (!(sin >> t))
+		return false;
+	if (sin >> p)
+		return false;
+	else
+		return true;
 }

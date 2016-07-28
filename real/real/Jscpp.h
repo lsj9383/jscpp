@@ -18,7 +18,6 @@ namespace jc
 	/* enum unit */
 	enum JType
 	{
-		JINT,			//json int
 		JDOUBLE,		//json double
 		JSTRING,		//json string
 		JBOOL,			//json boolean
@@ -29,7 +28,6 @@ namespace jc
 	/* union unit */
 	union JData
 	{
-		int *pInt;
 		double *pDouble;
 		std::string *pString;
 		bool *pBool;
@@ -57,12 +55,12 @@ namespace jc
 		const JType& GetType() const { return mType; }
 		const JData& GetData() const { return mData; }
 
-		void SetData(const JVal &val);						//保证相同的独立的JVal值.
-		void SetData(const int &val);						//保证相同的独立的int值.
-		void SetData(const double &val);					//保证相同的独立的double值.
-		void SetData(const std::string &val);				//保证相同的独立的string值.
-		void SetData(const bool &val);						//保证相同的独立的bool值.
-		void SetData(const std::vector<JNode *> &val);		//保证相同的独立的vector中的指针值.
+		void SetData(const JVal &val);							//保证相同的独立的JVal值.
+		void SetData(const int &val){ SetData((double)val); }	//保证相同的独立的double值.
+		void SetData(const double &val);						//保证相同的独立的double值.
+		void SetData(const std::string &val);					//保证相同的独立的string值.
+		void SetData(const bool &val);							//保证相同的独立的bool值.
+		void SetData(const std::vector<JNode *> &val);			//保证相同的独立的vector中的指针值.
 
 	private:
 		JType mType;
@@ -168,7 +166,7 @@ namespace jc
 
 		/* member fun */
 	private:
-		bool _findPathValue(std::vector<std::list<std::string>> &jpaths, std::vector<JVal> &jvals);
+		std::vector<std::string> _JPathsJValues(std::string s, std::string &ppaths);
 
 		/* member var */
 	private :

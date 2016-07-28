@@ -196,7 +196,6 @@ std::string JTree::_travel(JNode *cnode, int deep) const
 	{
 		switch (cnode->GetValue().GetType())
 		{
-		case JINT	: retString = getstring((int)*cnode->GetValue().GetData().pInt); break;
 		case JDOUBLE: retString = getstring((double)*cnode->GetValue().GetData().pDouble); break;
 		case JBOOL: retString = getstring((bool)*cnode->GetValue().GetData().pBool); break;
 		case JSTRING: retString = "\"" + *cnode->GetValue().GetData().pString + "\""; break;

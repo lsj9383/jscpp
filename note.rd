@@ -12,9 +12,6 @@
 		value,
 		value
 	]
-	在工程中，数组的组织形式和对象是相同的，只是在打印出来的时候会根据实际的类型进行转化为数组形式打印。
-	因此，数组其实是一个特殊的对象，特殊在于对象里面有多个key:value,而数组里面是多个value，省略了key。
-	因此可以把数组视为key不用人为干涉，并且从小到大排序的一个对象。
 
 	3.key:value的value有多种类型:
 	1).整数
@@ -39,7 +36,6 @@
 	2.JData, json data
 	union JData
 	{
-		int *pInt;
 		double *pDouble;
 		string *pString;
 		bool *pBool;
@@ -52,7 +48,6 @@
 	3.JType
 	enum JType
 	{
-		JINT,			//json int
 		JDOUBLE,		//json double
 		JSTRING,		//json string
 		JBOOL,			//json boolean
@@ -61,7 +56,14 @@
 	}
 	指示了node中的value可能的类型。
 	JNULL代指该node无可用value。
-	这里面没有为数组留出类型位置，因为数组的判断可以通过关键词的前缀和内容进行判断。
+	这里面没有为数组 和 int留出类型位置。
+	
+	1).对于数组。
+		在工程中，数组的组织形式和对象是相同的，只是在打印出来的时候会根据实际的类型进行转化为数组形式打印。
+		因此，数组其实是一个特殊的对象，特殊在于对象里面有多个key:value,而数组里面是多个value，省略了key。
+		因此可以把数组视为key不用人为干涉，并且从小到大排序的一个对象。
+	2).对于int
+		虽然JVal的接口可以传入int数据，但是在内部是将int转换为double来进行存储的，没有别的原因，这是为了简化操作。
 	
 	4.JValue
 	struct JVal
@@ -165,3 +167,4 @@
 		3).普通对象，产生
 			直接值
 		总结===>一个递归实现产生一个value，若是对象型会打印下一层的关键词。
+	3.load，将文件中的数据转换为json数据。

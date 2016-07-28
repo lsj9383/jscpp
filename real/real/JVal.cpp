@@ -8,8 +8,6 @@ JVal::~JVal()
 {
 	switch (mType)
 	{
-	case JINT:
-		delete mData.pInt;		break;
 	case JDOUBLE:
 		delete mData.pDouble;	break;
 	case JSTRING:
@@ -27,9 +25,6 @@ void JVal::SetData(const JVal &val)
 {
 	switch (val.mType)
 	{
-	case JINT:
-		SetData(*val.mData.pInt);
-		break;
 	case JDOUBLE:
 		SetData(*val.mData.pDouble);
 		break;
@@ -46,12 +41,6 @@ void JVal::SetData(const JVal &val)
 		assert(false);
 		break;
 	}
-}
-
-void JVal::SetData(const int &val)
-{
-	this->mData.pInt = new int(val);
-	this->mType = JINT;
 }
 
 void JVal::SetData(const double &val)
