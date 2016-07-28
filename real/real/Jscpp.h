@@ -165,7 +165,10 @@ namespace jc
 
 		/* other */
 		std::string travel(void) const;
+
 		/* member fun */
+	private:
+		bool _findPathValue(std::vector<std::list<std::string>> &jpaths, std::vector<JVal> &jvals);
 
 		/* member var */
 	private :

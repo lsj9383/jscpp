@@ -13,6 +13,28 @@ void NodeDemo(void)
 	JNode node5("ni4", JVal(true));
 }
 
+void JscppDemo0(void)
+{
+	int index;
+
+	Jscpp *jscpp = new Jscpp("student");
+
+	//set test
+	jscpp->set(JPath("name", ":"), string("lsj"));
+	jscpp->set(JPath("marry", ":"), false);
+	jscpp->set(JPath("test", "pass", ":"), true);
+	jscpp->set(JPath("test", "grade", "chinese", ":"), 89.0);
+	jscpp->set(JPath("test", "grade", "math", ":"), 115.5);
+	jscpp->set(JPath("test", "grade", "english", ":"), 103.1);
+	//travel test
+	cout << jscpp->travel() << endl;
+
+
+	//file test
+	jscpp->save("student.json");
+	delete jscpp;
+}
+
 void JscppDemo1(void)
 {
 	int index;
@@ -85,11 +107,21 @@ void JscppDemo2(void)
 	cout << *jscpp->get(JPath(JIndex(1), "name", ":")).GetData().pString << endl;
 	cout << *jscpp->get(JPath(JIndex(1), "test", "grade", "chinese", ":")).GetData().pDouble << endl;
 
-//	cout << jscpp->isAt(JPath(JIndex(1), "test", "grade", "chinese", ":")).GetData().pDouble << endl;
+	//	cout << jscpp->isAt(JPath(JIndex(1), "test", "grade", "chinese", ":")).GetData().pDouble << endl;
 	cout << jscpp->isAt(JPath(JIndex(0), "name", ":")) << endl;
 	cout << jscpp->isAt(JPath(JIndex(0), "name0", ":")) << endl;
 	cout << jscpp->isAt(JPath(JIndex(2), "name", ":")) << endl;
 	cout << jscpp->isAt(JPath(JIndex(0), "test", "grade", ":")) << endl;
+
+	delete jscpp;
+}
+
+void JscppDemo3(void)
+{
+	int index;
+
+	Jscpp *jscpp = new Jscpp("student");
+	jscpp->load("student.json");
 
 	delete jscpp;
 }
