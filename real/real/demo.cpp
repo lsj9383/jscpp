@@ -22,6 +22,7 @@ void JscppDemo0(void)
 	//set test
 	jscpp->set(JPath("name", ":"), string("lsj"));
 	jscpp->set(JPath("marry", ":"), false);
+	jscpp->set(JPath("birthday", ":"), false);
 	jscpp->set(JPath("test", "pass", ":"), true);
 	jscpp->set(JPath("test", "grade", "chinese", ":"), 89.0);
 	jscpp->set(JPath("test", "grade", "math", ":"), 115.5);
@@ -121,7 +122,7 @@ void JscppDemo3(void)
 	int index;
 
 	Jscpp *jscpp = new Jscpp("student");
-	jscpp->load("student.json");
+	jscpp->load("student_load2.json");
 	cout << jscpp->travel() << endl;
 
 	delete jscpp;

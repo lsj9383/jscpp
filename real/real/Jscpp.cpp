@@ -7,6 +7,7 @@
 using namespace std;
 using namespace jc;
 
+static string preArrayProcess(const string &content);
 static bool parseStringObject(const string &scontent, vector<string> &skeys, vector<string> &svalues);
 static void JPathJValueTransfer(const vector<string> &jpaths_jvalues, vector<list<string>> &jpaths, vector<JVal> &jvals);
 static bool isnum(string s);
@@ -32,6 +33,7 @@ bool Jscpp::load(char *file_path)
 	}
 	if (s.length() == 0)	return false;
 
+	preArrayProcess(s);
 	jpaths_jvalues = _JPathsJValues(s, string());		//将s中的所有路径与值提取出来，字符串形式
 	JPathJValueTransfer(jpaths_jvalues, jpaths, jvals);	//将字符串形式的path value转换为JPath和JValue格式
 
@@ -147,32 +149,32 @@ static bool parseStringObject(const string &scontent, vector<string> &skeys, vec
 	const char *content = scontent.c_str();
 	vector<int> indexs;
 	string chars;
-	vector<char> bufferBrace;		//大括号缓存
+	int  noteBrace=0;		//大括号缓存
 	bool auxFlag=true;				//辅助标志
 
 	int cend = scontent.length();
-	assert(content[0]=='{' && content[cend-1]=='}');
+	assert((content[0] == '{' && content[cend - 1] == '}') || (content[0] == '[' && content[cend - 1] == ']'));
 
 	for (int cnt = 0; cnt < cend; cnt++)
 	{
 		//1).根据大括号情况，对bufferBrace进行出入队
 		if (content[cnt] == '{')
 		{
-			bufferBrace.push_back('{');
+			noteBrace++;
 		}
 		else if (content[cnt] == '}')
 		{
-			if (bufferBrace.size() == 0)	return false;
-			bufferBrace.pop_back();
+			if (noteBrace == 0)	return false;
+			noteBrace--;
 		}
 
-		if (content[cnt] == ',' || bufferBrace.size() == 0)
+		if (content[cnt] == ',' || noteBrace == 0)
 		{
 			auxFlag = true;
 		}
 
 		//2).视情况，将数据压入chars和index.
-		if (((bufferBrace.size() == 1 && content[cnt] != '}') || (bufferBrace.size() == 0 && content[cnt] == '}')) && auxFlag &&
+		if (((noteBrace == 1 && content[cnt] != '}') || (noteBrace == 0 && content[cnt] == '}')) && auxFlag &&
 			(content[cnt] == '{' || content[cnt] == '}' || content[cnt] == '"' || content[cnt] == ':' || content[cnt] == ','))
 		{
 			chars.push_back(content[cnt]);
@@ -255,4 +257,28 @@ static bool isnum(string s)
 		return false;
 	else
 		return true;
+}
+
+static string preArrayProcess(const string &content)
+{
+	string chars;
+	vector<int> indexs;
+
+	/*
+		记录{ [ ] } , :出现的位置。对于 , 的数据只有两种:
+			1). ,前若是:    则,前是key-value数据，也就是个object
+			2). ,前若非:	则,前是value数据，也就是个数组
+	*/
+	for (int i = 0; i < content.length(); i++)
+	{
+		if (content.at(i) == '{' || content.at(i) == '[' || content.at(i) == ',' || 
+			content.at(i) == ']' || content.at(i) == '}' || content.at(i) == ':')
+		{
+			chars.push_back(content.at(i));
+			indexs.push_back(i);
+		}
+	}
+
+	cout << chars << endl;
+	return chars;
 }

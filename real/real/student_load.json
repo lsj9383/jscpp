@@ -1,0 +1,20 @@
+{
+   "name" : "lsj",
+   "marry" : false,
+   "birthday" :
+   {
+		"##0" : 1993,
+		"##1" : 4,
+		"##2" : 26
+   },
+   "test" : 
+   {
+	  "pass" : true,
+	  "grade" : 
+	  {
+		 "chinese" : 89,
+		 "math" : 115.5,
+		 "english" : 103.1
+	  }
+   }
+}

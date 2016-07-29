@@ -15,7 +15,6 @@ int main(void)
 //	NodeDemo();
 //	JscppDemo1();
 //	JscppDemo2();
-	JscppDemo0();
 	JscppDemo3();
 	return 0;
 }
