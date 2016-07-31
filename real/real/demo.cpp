@@ -122,7 +122,7 @@ void JscppDemo3(void)
 	int index;
 
 	Jscpp *jscpp = new Jscpp("student");
-	jscpp->load("student_load2.json");
+	jscpp->load("student.json");
 	cout << jscpp->travel() << endl;
 
 	delete jscpp;

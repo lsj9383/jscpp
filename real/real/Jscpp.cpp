@@ -33,7 +33,7 @@ bool Jscpp::load(char *file_path)
 	}
 	if (s.length() == 0)	return false;
 
-	preArrayProcess(s);
+	s = preArrayProcess(s);								//将s中的数组型，转换为特殊对象型
 	jpaths_jvalues = _JPathsJValues(s, string());		//将s中的所有路径与值提取出来，字符串形式
 	JPathJValueTransfer(jpaths_jvalues, jpaths, jvals);	//将字符串形式的path value转换为JPath和JValue格式
 
@@ -262,23 +262,51 @@ static bool isnum(string s)
 static string preArrayProcess(const string &content)
 {
 	string chars;
-	vector<int> indexs;
-
-	/*
-		记录{ [ ] } , :出现的位置。对于 , 的数据只有两种:
-			1). ,前若是:    则,前是key-value数据，也就是个object
-			2). ,前若非:	则,前是value数据，也就是个数组
-	*/
+	vector<int> jindexs;
+	vector<bool> isArray;
+	
 	for (int i = 0; i < content.length(); i++)
 	{
-		if (content.at(i) == '{' || content.at(i) == '[' || content.at(i) == ',' || 
-			content.at(i) == ']' || content.at(i) == '}' || content.at(i) == ':')
+		switch (content.at(i))
 		{
-			chars.push_back(content.at(i));
-			indexs.push_back(i);
+		case '[':
+			isArray.push_back(true);
+			jindexs.push_back(0);
+			break;
+		case '{':
+			isArray.push_back(false);
+			jindexs.push_back(0);
+			break;
+		case ']':
+		case '}':
+			isArray.pop_back();
+			jindexs.pop_back();
+		default:
+			break;
 		}
+
+		if (content.at(i) == '[')
+		{
+			chars += '{';
+		}
+		else if (content.at(i) == ']')
+		{
+			chars += '}';
+		}
+		else
+		{
+			chars += content.at(i);
+		}
+
+		if (content.at(i) == '[' || content.at(i) == ',')
+		{
+			if (isArray.back())
+			{
+				chars += (string("\"") + JIndex(jindexs.back()++) + string("\":"));
+			}
+		}
+
 	}
 
-	cout << chars << endl;
 	return chars;
 }

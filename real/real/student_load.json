@@ -1,11 +1,7 @@
 {
    "name" : "lsj",
    "marry" : false,
-   "birthday" :
-   {
-		"##0" : 1993,
-		"##1" : 4,
-		"##2" : 26
+   "birthday" :[1993,4,26]
    },
    "test" : 
    {
