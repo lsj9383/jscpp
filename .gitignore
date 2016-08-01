@@ -1,11 +1,15 @@
-real/*/*
-real/*.sdf
-real/*.sln
-real/*.suo
-real/*.opensdf
-real/real/*.opensdf
+demo/*/*
+demo/*.sdf
+demo/*.sln
+demo/*.suo
+demo/*.opensdf
+demo/demo/*.opensdf
 
-!real/real/*.cpp
-!real/real/*.h
-!real/real/*.json
+Jscpp/Jscpp/Debug/
+Jscpp/Debug/
+
+!demo/demo/*.cpp
+!demo/demo/*.h
+!demo/demo/*.json
+
 !.gitigonre
