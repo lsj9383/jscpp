@@ -1,3 +1,23 @@
+# Jscpp —— json的c++实现
+	`Jscpp`是一个c++类，Jscpp对象中以`树形结构`保存了json数据，并提供了一系列方法以进行对json数据的操作。这些操作包括:<br>
+	* 读取json文件中的数据到Jscpp对象
+	* 将Jscpp对象中的数据写入json文件
+	* Jscpp对象的json数据的写入/读取
+
+## 文件结构
+	当前git根路径下的文件作用:<br>
+	* include
+		Jscpp头文件。
+	* src
+		Jscpp源文件。
+	* lib
+		Jscpp静态库。
+	* Jscpp
+		visual studio2013编译Jscpp静态库的工程。
+	* demo
+		visual studio2013使用Jscpp的示例。
+## 使用说明
+
 json load and save in c++.
 There is some interface for user:
 	function :
