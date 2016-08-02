@@ -18,15 +18,24 @@ Jscpp静态库。
 * Jscpp<br>
 visual studio2013编译Jscpp静态库的工程。
 * demo<br>
-visual studio2013使用Jscpp的示例。
-## 使用说明
+visual studio2013使用Jscpp的示例。<br>
 
-json load and save in c++.
-There is some interface for user:
-	function :
-		1).list<string> JPath(key1, key2, ... ":");
-		以":"结尾的变参函数。将变参函数所描绘的路径，转换为list<string>
-			
+## 使用说明
+### 公共函数:
+```cpp
+/*********************************************************
+functioin 	: JPath
+param		: (key1, key2, ... ":") 参数不定,以冒号结尾,key1等需要时string类型
+return 		: list<string>
+description	: 将key1, key2, ...写入链表list<string>
+**********************************************************/
+list<string> JPath(key1, key2, ... ":");
+```
+
+### 类
+#### Jscpp
+#### JVal
+	
 	Jscpp class :
 		ctor:
 			Jscapp jscpp = new Jscpp("root_key");
@@ -35,7 +44,7 @@ There is some interface for user:
 		file io:
 			1).bool b = jscpp->save(file_path);
 			将jscpp的数据按json格式进行保存, b返回函数操作结果是否成功。
-				
+			
 			2). bool b = jscpp->load(file_path);
 			将json格式数据，加载到jscpp的jtree中，b返回函数操作结果是否成功。
 		
