@@ -23,42 +23,75 @@ visual studio2013使用Jscpp的示例。<br>
 ## 使用说明
 ### 公共函数:
 ```cpp
-/*********************************************************
+/***************************************************************************************
 functioin 	: JPath
 param		: (key1, key2, ... ":") 参数不定,以冒号结尾,key1等需要时string类型
 return 		: list<string>
 description	: 将key1, key2, ...写入链表list<string>
-**********************************************************/
+*****************************************************************************************/
 list<string> JPath(key1, key2, ... ":");
 ```
 
 ### 类
-#### Jscpp
-#### JVal
-	
-	Jscpp class :
-		ctor:
-			Jscapp jscpp = new Jscpp("root_key");
-			初始化jscpp，顶层关键词为"root_key"，虽然逻辑上存在，但是其实它是隐藏起的只是个占位符，任何函数都不会依赖于该关键词。
-				
-		file io:
-			1).bool b = jscpp->save(file_path);
-			将jscpp的数据按json格式进行保存, b返回函数操作结果是否成功。
-			
-			2). bool b = jscpp->load(file_path);
-			将json格式数据，加载到jscpp的jtree中，b返回函数操作结果是否成功。
-		
-		object io:
-			1).jscpp->set(list<string> jpath, JVal jvalue);
-			无返回。jvalue支持隐式转换。
-				
-			2).JVal n = jscpp->get(list<string> jpath);
-			返回的是JVal类型，这里面包含了对应字段的数据类型与数据。
-				
-			3).bool b = jscpp->isAt(list<string> jpath);
-			返回bool，用来检测指定的数据是否存在。
-			
-		other :
+##### Jscpp
+```cpp
+/***************************************************************************************
+functioin 	: Jscpp(构造函数)
+param		: rootkey 根关键词
+return 		: Jscpp对象.
+description	: 创建根关键字为rootkey的jscpp对象.
+*****************************************************************************************/
+Jscapp jscpp = new Jscpp(string rootkey);
+
+/***************************************************************************************
+interface 	: save
+param		: file_path 文件路径
+return 		: 操作是否成功
+description	: 将当前jscpp对象中的数据以json数据的格式，保存到指定文件中
+*****************************************************************************************/
+bool b = jscpp->save(string file_path);
+
+/***************************************************************************************
+interface 	: load
+param		: file_path 文件路径
+return 		: 操作是否成功
+description	: 将指定路径的json文件中的数据，导入jscpp对象
+*****************************************************************************************/
+bool b = jscpp->load(string file_path);
+
+/***************************************************************************************
+interface 	: set
+param		: jpath json数据的路径, jvalue 待写入的数据(支持强制转换)
+return 		: void
+description	: 将jpath的值设为jvalue, 若jpath不存在，则生成该jpath
+*****************************************************************************************/
+void jscpp->set(list<string> jpath, JVal jvalue);
+
+/***************************************************************************************
+interface 	: get
+param		: jpath json数据的路径
+return 		: jval 读取出的值
+description	: 将jpath中的jval读取出来。
+*****************************************************************************************/
+JVal jval = jscpp->get(list<sring> jpath);
+
+/***************************************************************************************
+interface 	: isAt
+param		: jpath json数据的路径格式
+return 		: 是否存在
+description	: 判断jpath是否存在
+*****************************************************************************************/
+bool b = jscpp->isAt(list<string> jpath);
+
+/***************************************************************************************
+interface 	: travel
+param		: no
+return 		: string 
+description	: 遍历Jscpp对象内部的json数据，并以json文件格式的方式放回.
+*****************************************************************************************/
+string s = jscpp->travel();
+```
+##### JVal
 			1).string s = jscpp->travel();
 			遍历内容，并将内容保存于s中。
 		
