@@ -20,7 +20,7 @@ visual studio2013编译Jscpp静态库的工程。
 * demo<br>
 visual studio2013使用Jscpp的示例。<br>
 
-## 使用说明
+## 编程说明
 ### 公共函数:
 ```cpp
 /***************************************************************************************
@@ -35,6 +35,33 @@ list<string> JPath(key1, key2, ... ":");
 ### 类
 #### 1.JVal
 #### 2.Jscpp
+总览:<br>
+```cpp
+class Jscpp
+{
+	/* ctor and de-ctor */
+public:
+	Jscpp() :jtree(NULL){}
+	explicit Jscpp(std::string _root_key = "root");
+	Jscpp(const Jscpp &jscpp) = delete;
+	~Jscpp();
+	
+	/* interface */
+public:
+	const Jscpp& operator=(const Jscpp &jscpp) = delete;
+	bool save(char * file_path);
+	bool load(char *file_path);
+	void set(std::list<std::string> path, const JVal &jval);
+	const JVal& get(std::list<std::string> path) const;
+	bool isAt(std::list<std::string> path) const;
+	std::string travel(void) const;
+	
+	...
+};
+```
+具体说明:
+
+=
 ```cpp
 /***************************************************************************************
 functioin 	: Jscpp(构造函数)
@@ -94,7 +121,7 @@ string s = jscpp->travel();
 ```
 
 		
-note：
-	1).对于stirng型的value参数，一定要用string("xxxx");，若直接用"xxxx"会被编译器匹配为bool类型，以致报错。
-	2).对于double型的value参数，要用加小数点，否则会被翻译为int型。
+note：<br>
+	1).对于stirng型的value参数，一定要用string("xxxx");，若直接用"xxxx"会被编译器匹配为bool类型，以致报错。<br>
+	2).对于double型的value参数，要用加小数点，否则会被翻译为int型。<br>
 	
