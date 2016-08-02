@@ -6,15 +6,15 @@
 
 ## 文件结构
 当前git根路径下的文件作用:<br>
-* include
+* include<br>
 Jscpp头文件。
-* src
+* src<br>
 Jscpp源文件。
-* lib
+* lib<br>
 Jscpp静态库。
-* Jscpp
+* Jscpp<br>
 visual studio2013编译Jscpp静态库的工程。
-* demo
+* demo<br>
 visual studio2013使用Jscpp的示例。
 ## 使用说明
 
