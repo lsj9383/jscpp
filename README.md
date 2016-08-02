@@ -35,20 +35,18 @@ list<string> JPath(key1, key2, ... ":");
 ### 类
 #### 1.JVal
 #### 2.Jscpp
+不支持隐式转换，也不支持Jscpp之间的赋值。
 总览:<br>
 ```cpp
 class Jscpp
 {
 	/* ctor and de-ctor */
 public:
-	Jscpp() :jtree(NULL){}
 	explicit Jscpp(std::string _root_key = "root");
-	Jscpp(const Jscpp &jscpp) = delete;
 	~Jscpp();
 	
 	/* interface */
 public:
-	const Jscpp& operator=(const Jscpp &jscpp) = delete;
 	bool save(char * file_path);
 	bool load(char *file_path);
 	void set(std::list<std::string> path, const JVal &jval);
@@ -59,9 +57,8 @@ public:
 	...
 };
 ```
-具体说明:
-
 =
+具体说明:
 ```cpp
 /***************************************************************************************
 functioin 	: Jscpp(构造函数)
