@@ -1,4 +1,5 @@
 # Jscpp —— json的c++实现
+![json]( https://github.com/lsj9383/jscpp/raw/master/icon/json.jpg)
 `Jscpp`是一个c++类，Jscpp对象中以`树形结构`保存了json数据，并提供了一系列方法以进行对json数据的操作。这些操作包括:<br>
 * 读取json文件中的数据到Jscpp对象
 * 将Jscpp对象中的数据写入json文件
