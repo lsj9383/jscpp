@@ -34,9 +34,38 @@ list<string> JPath(key1, key2, ... ":");
 
 ### 类
 #### 1.JVal
+Json Value, 是Jscpp直接使用的数据<br>
+JVal对象支持直接赋值，是深拷贝。
+```cpp
+class JVal
+{
+	/* ctor and de-ctor */
+public:
+	JVal(const JVal &_value);
+	JVal(const int &_data);
+	JVal(const double &_data);
+	JVal(const std::string &_data);
+	JVal(const bool &_data);
+	~JVal();
+	
+	/* interface */
+public:
+	JVal& operator=(const JVal &_value);
+
+	const JType& GetType();
+	const JData& GetData();
+
+	void SetData(const JVal &val);							//保证相同的独立的JVal值.
+	void SetData(const int &val);							//保证相同的独立的double值.
+	void SetData(const double &val);						//保证相同的独立的double值.
+	void SetData(const std::string &val);					//保证相同的独立的string值.
+	void SetData(const bool &val);							//保证相同的独立的bool值.
+	
+	...
+};
+```
 #### 2.Jscpp
 不支持隐式转换，也不支持Jscpp之间的赋值。
-总览:<br>
 ```cpp
 class Jscpp
 {
