@@ -1,12 +1,12 @@
 ![](https://github.com/lsj9383/jscpp/blob/master/icon/jscpp.jpg?raw=true)
 # Jscpp —— json的c++实现
 
+[JSON CHINA](http://www.json.org.cn/) | [JSON CHECK](http://www.bejson.com/) | [Visual Studio](https://www.visualstudio.com/zh-cn/)
+
 `Jscpp`是一个c++类，Jscpp对象中以`树形结构`保存了json数据，并提供了一系列方法以进行对json数据的操作。这些操作包括:<br>
 * 读取json文件中的数据到Jscpp对象
 * 将Jscpp对象中的数据写入json文件
 * Jscpp对象的json数据的写入/读取
-
-[JSON CHINA](http://www.json.org.cn/) | [JSON CHECK](http://www.bejson.com/) | [Visual Studio](https://www.visualstudio.com/zh-cn/)
 
 ## 一、文件结构
 当前git根路径下的文件作用:<br>
@@ -21,7 +21,7 @@
 
 ## 三、快速开始
 
-## 三、编程说明
+## 四、编程说明
 ### 公共函数:
 ```cpp
 /***************************************************************************************
