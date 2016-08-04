@@ -1,5 +1,5 @@
 ![](https://github.com/lsj9383/jscpp/blob/master/icon/jscpp.jpg?raw=true)
-# Jscpp —— json的c++实现
+# Jscpp 简单的json c++使用框架
 
 [JSON CHINA](http://www.json.org.cn/) | [JSON CHECK](http://www.bejson.com/) | [Visual Studio](https://www.visualstudio.com/zh-cn/)
 
