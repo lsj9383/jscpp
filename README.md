@@ -6,7 +6,9 @@
 * 将Jscpp对象中的数据写入json文件
 * Jscpp对象的json数据的写入/读取
 
-## 文件结构
+[JSON CHINA](http://www.json.org.cn/) | [JSON CHECK](http://www.bejson.com/) | [Visual Studio](https://www.visualstudio.com/zh-cn/)
+
+## 一、文件结构
 当前git根路径下的文件作用:<br>
 * /include/, Jscpp头文件。
 * /src/, Jscpp源文件。
@@ -14,7 +16,12 @@
 * /Jscpp/, visual studio2013编译Jscpp静态库的工程。
 * /demo/, visual studio2013使用Jscpp的示例。<br>
 
-## 编程说明
+## 二、安装
+零安装，只需要有Visual Studio 2013及其以上版本即可。
+
+## 三、快速开始
+
+## 三、编程说明
 ### 公共函数:
 ```cpp
 /***************************************************************************************
