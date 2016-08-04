@@ -34,9 +34,6 @@ void JVal::SetData(const JVal &val)
 	case JBOOL:
 		SetData(*val.mData.pBool);
 		break;
-	case JOBJECT:
-		SetData(*val.mData.pKeyValue);
-		break;
 	default:	
 		assert(false);
 		break;
@@ -61,12 +58,8 @@ void JVal::SetData(const bool &val)
 	this->mType = JBOOL;
 }
 
-void JVal::SetData(const vector<JNode *> &val)
+void JVal::AsJObject(void)
 {
 	this->mData.pKeyValue = new vector<JNode *>(0);
-	for (int i = 0; i < val.size(); i++)
-	{
-		this->mData.pKeyValue->push_back(val[i]);
-	}
 	this->mType = JOBJECT;
 }

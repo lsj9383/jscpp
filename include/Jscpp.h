@@ -46,7 +46,6 @@ namespace jc
 		JVal(const double &_data) { SetData(_data); }
 		JVal(const std::string &_data) { SetData(_data); }
 		JVal(const bool &_data) { SetData(_data); }
-		JVal(const std::vector<JNode *> &_data) { SetData(_data); }
 
 		/* interface */
 	public:
@@ -60,7 +59,7 @@ namespace jc
 		void SetData(const double &val);						//保证相同的独立的double值.
 		void SetData(const std::string &val);					//保证相同的独立的string值.
 		void SetData(const bool &val);							//保证相同的独立的bool值.
-		void SetData(const std::vector<JNode *> &val);			//保证相同的独立的vector中的指针值.
+		void AsJObject(void);
 
 	private:
 		JType mType;
@@ -85,8 +84,7 @@ namespace jc
 
 		void InitObject()
 		{
-			std::vector<JNode*> initKeyValue;
-			SetValue(JVal(initKeyValue));
+			mVal.AsJObject();
 		}
 		void AddObject(const JNode* newObject)
 		{
