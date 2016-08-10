@@ -11,6 +11,7 @@ using namespace jc;
 static string preArrayProcess(const string &content);
 static bool parseStringObject(const string &scontent, vector<string> &skeys, vector<string> &svalues);
 static void JPathJValueTransfer(const vector<string> &jpaths_jvalues, vector<list<string>> &jpaths, vector<JVal> &jvals);
+static bool checkJsonString(const string &content);
 
 Jscpp::Jscpp(string _root_key)
 {
@@ -33,6 +34,7 @@ bool Jscpp::load(char *file_path)
 	}
 	if (s.length() == 0)	return false;
 
+	if (!checkJsonString(s))	return false;
 	s = preArrayProcess(s);								//将s中的数组型，转换为特殊对象型
 	jpaths_jvalues = _JPathsJValues(s, string());		//将s中的所有路径与值提取出来，字符串形式
 	JPathJValueTransfer(jpaths_jvalues, jpaths, jvals);	//将字符串形式的path value转换为JPath和JValue格式
@@ -297,4 +299,32 @@ static string preArrayProcess(const string &content)
 	}
 
 	return chars;
+}
+
+static bool checkJsonString(const string &content)
+{
+	list<char> bracketBuffer;
+
+	for (int i = 0; i < content.length(); i++)
+	{
+		switch (content.at(i))
+		{
+		case '[':
+		case '{':
+			bracketBuffer.push_back(content.at(i));
+			break;
+		case ']':
+			if (bracketBuffer.back() != '[')	return false;
+			bracketBuffer.pop_back();
+			break;
+		case '}':
+			if (bracketBuffer.back() != '{')	return false;
+			bracketBuffer.pop_back();
+			break;
+		default:
+			break;
+		}
+	}
+
+	return true;
 }
